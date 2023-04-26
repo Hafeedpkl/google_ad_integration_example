@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:google_ad_integration/ad_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -14,11 +15,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     initBannerId();
     initInterstitialAd();
+    initRewardedAd();
     super.initState();
   }
 
   late BannerAd bannerAd;
   late InterstitialAd interstitialAd;
+  late RewardedAd rewardedAd;
   bool isAdLoaded = false;
 
   initBannerId() {
@@ -48,9 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
           onAdLoaded: (ad) {
             print('$ad loaded');
             interstitialAd = ad;
-            setState(() {
-              isAdLoaded = true;
-            });
           },
           onAdFailedToLoad: (error) {
             print(error);
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) =>
-          print('ad onShowedFullScreenContent'),
+          print('$ad onShowedFullScreenContent'),
       onAdWillDismissFullScreenContent: (ad) {
         print('$ad onDismissibleFullScreenContent');
         ad.dispose();
@@ -80,6 +80,44 @@ class _MyHomePageState extends State<MyHomePage> {
     interstitialAd.show();
   }
 
+  initRewardedAd() {
+    RewardedAd.load(
+        adUnitId: 'ca-app-pub-3940256099942544/5224354917',
+        request: AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (ad) {
+            log('$ad loaded', name: "Rewarded Ad");
+            rewardedAd = ad;
+          },
+          onAdFailedToLoad: (error) {
+            log('$error', name: 'rewarded');
+          },
+        ));
+  }
+
+  showRewardedAd() {
+    rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (ad) =>
+          log('ad onAdshowedFullScreenContent'),
+      onAdDismissedFullScreenContent: (ad) {
+        log('$ad onAdDismissedFullScreenContent');
+        ad.dispose();
+        initRewardedAd();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        log('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        initRewardedAd();
+      },
+    );
+    rewardedAd.setImmersiveMode(true);
+    rewardedAd.show(
+      onUserEarnedReward: (ad, reward) {
+        log('🥳Congrats you earned ${reward.amount} ${reward.type}');
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,11 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'here is example for google ads from Admob',
+              'here is examples for google ads from Admob',
             ),
             ElevatedButton(
                 onPressed: showInterstitialAd,
-                child: Text("show InterstitialAd"))
+                child: Text("show InterstitialAd")),
+            ElevatedButton(
+                onPressed: showRewardedAd, child: Text("show Rewarded Ad"))
           ],
         ),
       ),
