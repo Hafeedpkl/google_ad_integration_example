@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "782423494724",
+    "project_id": "admob-flutter-example-ff05a",
+    "storage_bucket": "admob-flutter-example-ff05a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782423494724:android:87a98d40b1b7ebb7b26c11",
+        "android_client_info": {
+          "package_name": "com.example.google_ad_integration"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782423494724-6o5r36flr72st89e217a1sqp1vqa1me3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmjoZE7t8NfRxNtlFZriDvnDcLKdTVpsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782423494724-6o5r36flr72st89e217a1sqp1vqa1me3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
